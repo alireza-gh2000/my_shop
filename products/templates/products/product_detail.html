@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load static %}
+{% load persian_filters %}
+
+{% block title %}{{ product.title }}{% endblock %}
+
+{% block content %}
+
+<div class="product-container">
+  <div class="product-info" style="text-align: right; direction: rtl;">
+  <div class="product-detail layout-grid">
+
+    <section class="info-col">
+      <div class="info-card">
+        <h1 class="detail-title">{{ product.title }}</h1>
+
+        <p class="price">{{ product.price|price_fa }}</p>
+
+        <div class="product-features">
+          <h4>ویژگی‌ها:</h4>
+          <ul>
+            {% if product.sku %}<li>کد محصول: {{ product.sku }}</li>{% endif %}
+            {% comment %} ویژگی‌های دلخواه (Feature model) {% endcomment %}
+            {% for f in product.features.all %}
+              <li>{{ f.name }}: {{ f.value }}</li>
+            {% empty %}
+              {# هیچ فیچری نیست #}
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="buy-panel">
+          <form method="post" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <button type="submit" class="buy-btn buy-large">افزودن به سبد خرید</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <aside class="gallery-col">
+      <div class="gallery">
+        <div class="main-image-wrapper">
+          {% if product.image %}
+            <img id="mainProductImg" src="{{ product.image.url }}" alt="{{ product.title }}" class="main-image">
+          {% else %}
+            <img id="mainProductImg" src="{% static 'no-image.png' %}" alt="بدون تصویر" class="main-image">
+          {% endif %}
+
+          <div id="fullscreenOverlay" class="fullscreen-overlay" aria-hidden="true" style="display:none;">
+            <button id="fsPrev" class="fs-nav fs-prev" aria-label="قبلی">›</button>
+            <img id="fsImage" class="fs-image" src="" alt="">
+            <button id="fsNext" class="fs-nav fs-next" aria-label="بعدی">‹</button>
+            <button id="fsClose" class="fs-close" aria-label="بستن">✕</button>
+          </div>
+        </div>
+
+        <div class="thumbs" id="thumbsContainer">
+          {% if product.image %}
+            <button type="button" class="thumb" data-src="{{ product.image.url }}">
+              <img src="{{ product.image.url }}" alt="{{ product.title }}">
+            </button>
+          {% endif %}
+
+          {% for img in product.images.all %}
+            <button type="button" class="thumb" data-src="{{ img.image.url }}">
+              <img src="{{ img.image.url }}" alt="{{ img.alt|default:product.title }}">
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </aside>
+
+    <div class="full-desc">
+      <h3>توضیحات کامل</h3>
+      <div class="detail-desc" style="direction: rtl; text-align: right;">
+        {{ product.description|linebreaks }}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- JS: Gallery + Fullscreen + Keyboard + Thumbs behaviour -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const mainImg = document.getElementById('mainProductImg');
+  const thumbButtons = Array.from(document.querySelectorAll('.thumb'));
+  const srcList = thumbButtons.map(b => b.dataset.src).filter(Boolean);
+
+  // safe guards
+  if (!mainImg) return;
+
+  // Click thumbnail ---> change main image
+  thumbButtons.forEach((btn, idx) => {
+    btn.addEventListener('click', function () {
+      const src = this.getAttribute('data-src');
+      if (src) mainImg.src = src;
+      // mark active
+      thumbButtons.forEach(tb => tb.classList.remove('thumb-active'));
+      btn.classList.add('thumb-active');
+    });
+  });
+
+  // Fullscreen overlay elements
+  const fsOverlay = document.getElementById('fullscreenOverlay');
+  const fsImage = document.getElementById('fsImage');
+  const fsClose = document.getElementById('fsClose');
+  const fsPrev = document.getElementById('fsPrev');
+  const fsNext = document.getElementById('fsNext');
+
+  function openFS(index) {
+    if (!fsOverlay || !fsImage) return;
+    if (srcList.length === 0) {
+      fsImage.src = mainImg.src;
+      fsImage.dataset.index = 0;
+    } else {
+      if (index < 0) index = srcList.length - 1;
+      if (index >= srcList.length) index = 0;
+      fsImage.src = srcList[index];
+      fsImage.dataset.index = index;
+    }
+    fsOverlay.style.display = 'flex';
+    fsOverlay.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // click main image -> open fullscreen at current index
+  mainImg.addEventListener('click', function () {
+    const current = srcList.indexOf(mainImg.src);
+    const idx = current >= 0 ? current : 0;
+    openFS(idx);
+  });
+
+  // dblclick thumbs -> open FS on that image
+  thumbButtons.forEach((btn, idx) => {
+    btn.addEventListener('dblclick', function () {
+      openFS(idx);
+    });
+  });
+
+  function fsShowPrev() {
+    if (!fsImage) return;
+    let i = parseInt(fsImage.dataset.index || 0, 10) - 1;
+    if (i < 0) i = srcList.length - 1;
+    openFS(i);
+  }
+  function fsShowNext() {
+    if (!fsImage) return;
+    let i = parseInt(fsImage.dataset.index || 0, 10) + 1;
+    if (i >= srcList.length) i = 0;
+    openFS(i);
+  }
+
+  if (fsPrev) fsPrev.addEventListener('click', function (e) { e.stopPropagation(); fsShowPrev(); });
+  if (fsNext) fsNext.addEventListener('click', function (e) { e.stopPropagation(); fsShowNext(); });
+
+  // close
+  function closeFS(){
+    if (!fsOverlay) return;
+    fsOverlay.style.display = 'none';
+    fsOverlay.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+  if (fsClose) fsClose.addEventListener('click', closeFS);
+  if (fsOverlay) fsOverlay.addEventListener('click', function(e) {
+    if (e.target === fsOverlay) closeFS();
+  });
+
+  // keyboard navigation
+  document.addEventListener('keydown', function (e) {
+    if (!fsOverlay) return;
+    if (fsOverlay.style.display === 'flex') {
+      if (e.key === 'ArrowLeft') fsShowPrev();
+      if (e.key === 'ArrowRight') fsShowNext();
+      if (e.key === 'Escape') closeFS();
+    }
+  });
+
+  // ensure first thumb active
+  if (thumbButtons.length) {
+    thumbButtons[0].classList.add('thumb-active');
+  }
+});
+</script>
+
+{% endblock %}

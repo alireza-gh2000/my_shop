@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ثبت‌نام</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-box">
+        <h2>ایجاد حساب کاربری</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-box {% if message.tags == 'success' %}message-success{% else %}message-error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>نام کاربری:</label>
+            <input type="text" name="username" class="input-field" required>
+
+            <label>ایمیل:</label>
+            <input type="email" name="email" class="input-field" required>
+
+            <label>رمز عبور:</label>
+            <input type="password" name="password1" class="input-field" required>
+
+            <label>تکرار رمز عبور:</label>
+            <input type="password" name="password2" class="input-field" required>
+
+            <button type="submit" class="auth-submit">ثبت نام</button>
+
+            <div class="auth-switch">
+                قبلاً حساب دارید؟ <a href="{% url 'login' %}">ورود</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

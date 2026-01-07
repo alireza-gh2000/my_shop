@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}محصولات | My Shop{% endblock %}
+
+{% block content %}
+
+<div class="product-container">
+
+    <h1 class="page-title">محصولات فروشگاه</h1>
+
+    <div class="product-grid">
+
+        {% for product in products %}
+        <div class="product-card">
+            <img src="{{ product.image.url }}" class="product-img">
+
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p class="price">{{ product.price }} تومان</p>
+                <a href="{{ product.get_absolute_url }}" class="buy-btn">مشاهده محصول</a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

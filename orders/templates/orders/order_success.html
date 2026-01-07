@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}سفارش موفق{% endblock %}
+
+{% block content %}
+<div class="order-detail-card">
+    <h2>سفارش با موفقیت ثبت شد</h2>
+    <p>شماره سفارش: {{ order.id }}</p>
+
+    <a href="{% url 'product_list' %}" class="btn-primary">بازگشت به فروشگاه</a>
+</div>
+{% endblock %}

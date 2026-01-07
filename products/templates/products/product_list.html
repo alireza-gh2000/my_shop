@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load persian_filters %}
+
+{% block title %}لیست محصولات{% endblock %}
+
+{% block content %}
+<div class="product-container">
+
+    <h1 class="page-title">محصولات</h1>
+
+    <div class="product-grid">
+        {% for product in products %}
+            <div class="product-card">
+
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="product-img">
+                {% else %}
+                    <img src="/static/no-image.png" class="product-img">
+                {% endif %}
+
+                <div class="product-info">
+                    <h3>{{ product.title }}</h3>
+                    <p class="price">{{ product.price|price_fa }}</p>
+
+                    <a href="{% url 'product_detail' product.id %}" class="buy-btn">مشاهده محصول</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>هیچ محصولی یافت نشد.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

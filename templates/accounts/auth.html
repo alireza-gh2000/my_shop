@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <!-- فرم ورود -->
+    <div class="auth-box login-box">
+        <h3>ورود</h3>
+
+        {% if messages %}
+            <ul class="auth-messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="login">
+
+            <label>نام کاربری</label>
+            <input type="text" name="username" required>
+
+            <label>رمز عبور</label>
+            <input type="password" name="password" required>
+
+            <button type="submit" class="auth-btn">ورود</button>
+        </form>
+
+        <p class="auth-switch">
+            حساب ندارید؟ <a href="#signup">ثبت‌نام</a>
+        </p>
+    </div>
+
+    <!-- فرم ثبت‌نام -->
+    <div class="auth-box signup-box">
+        <h3>ثبت‌نام</h3>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="signup">
+
+            <label>نام کاربری</label>
+            <input type="text" name="username" required>
+
+            <label>ایمیل (اختیاری)</label>
+            <input type="email" name="email">
+
+            <label>رمز عبور</label>
+            <input type="password" name="password1" required>
+
+            <label>تکرار رمز عبور</label>
+            <input type="password" name="password2" required>
+
+            <button type="submit" class="auth-btn">ثبت‌نام</button>
+        </form>
+
+        <p class="auth-switch">
+            حساب دارید؟ <a href="#login">ورود</a>
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}

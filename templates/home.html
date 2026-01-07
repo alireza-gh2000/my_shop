@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Shop</title>
+</head>
+<body>
+    <h1>محصولات فروشگاه</h1>
+
+    {% for product in products %}
+        <h2>{{ product.title }}</h2>
+        <p>Price: {{ product.price }} تومان</p>
+        <p>{{ product.description }}</p>
+        <hr>
+    {% empty %}
+        <p>هیچ محصولی موجود نیست.</p>
+    {% endfor %}
+</body>
+</html>

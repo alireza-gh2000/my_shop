@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% load jalali_filters %}
+{% load price_filters %}
+{% load number_filters %}
+
+{% block title %}سفارش‌های من{% endblock %}
+
+{% block content %}
+<div class="orders-list" dir="rtl">
+  <h2>سفارش‌های من</h2>
+
+  {% if orders %}
+    <ul>
+      {% for order in orders %}
+        <li class="order-card">
+          <a href="{% url 'order_detail' order.id %}">
+            <div class="order-row" style="display:flex;justify-content:space-between;align-items:center;">
+
+              <div class="order-left">
+                <div class="order-id">
+                  سفارش شماره
+                  <strong>{{ order.id|to_persian }}</strong>
+                </div>
+
+                <div class="order-total">
+                  مبلغ:
+                  <strong>{{ order.total_price|three_digits|to_persian }} تومان</strong>
+                </div>
+              </div>
+
+              <div class="order-right" style="text-align:left;">
+                <div class="order-date">
+                  تاریخ:
+                  {{ order.created_at|to_jalali:"%Y/%m/%d - %H:%M"|to_persian }}
+                </div>
+              </div>
+
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p style="text-align:center; color:#ddd; margin-top:30px;">
+      تا الان هیچ سفارشی ثبت نکردید.
+    </p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load persian_filters %}
+{% load jalali_filters %}
+{% block title %}جزئیات سفارش{% endblock %}
+
+{% block content %}
+
+
+<div class="order-detail-card">
+
+    <h2 class="order-title">
+        جزئیات سفارش شماره {{ order.id }}
+    </h2>
+
+    <div class="order-meta">
+
+        <div class="text-light">
+            📅 تاریخ ثبت:
+            {{ order.created_at|to_jalali:"%Y/%m/%d - %H:%M" }}
+        </div>
+
+        <div class="total-label">
+            💰 مبلغ کل:
+            <span class="price">{{ order.total_price|price_fa }}</span>
+        </div>
+
+    </div>
+
+    <h3 class="order-products-title">محصولات سفارش داده شده</h3>
+
+    <div class="order-items">
+        {% for item in order.items.all %}
+            <div class="order-item-row">
+
+                <div class="order-item-name">
+                    {{ item.product.title }}
+                </div>
+
+                <div class="order-item-info">
+                    <span>تعداد: {{ item.quantity }}</span>
+
+                    <span class="unit-price">
+                        قیمت واحد:
+                        <span class="price">{{ item.price|price_fa }}</span>
+                    </span>
+
+                    <span class="subtotal-price">
+                        جمع:
+                        <span class="price">{{ item.price|price_fa }}</span>
+                    </span>
+                </div>
+
+            </div>
+        {% empty %}
+            <p class="empty-text">محصولی در این سفارش وجود ندارد.</p>
+        {% endfor %}
+    </div>
+
+    <div class="back-btn-wrapper">
+        <a href="{% url 'order_list' %}" class="back-btn">
+            بازگشت به لیست سفارش‌ها
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

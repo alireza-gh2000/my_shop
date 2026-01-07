@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>فروشگاه من</title>
+</head>
+<body>
+    <h1>لیست محصولات</h1>
+
+    <ul>
+        {% for p in products %}
+        <li>
+            <a href="{% url 'product_detail' p.pk %}">
+                {{ p.title }}
+            </a>
+            - {{ p.price }} تومان
+        </li>
+        {% empty %}
+        <li>هیچ محصولی وجود ندارد.</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

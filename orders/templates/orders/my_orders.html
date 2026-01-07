@@ -1,0 +1,10 @@
+<h1>لیست سفارش‌های من</h1>
+
+{% for order in orders %}
+    <p>
+        سفارش شماره {{ order.id }} - مبلغ:
+        <span class="price">{{ order.total_price }}</span>
+    </p>
+{% empty %}
+    <p>هیچ سفارشی ثبت نشده</p>
+{% endfor %}

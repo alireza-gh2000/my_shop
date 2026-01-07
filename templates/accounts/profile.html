@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}پروفایل من{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="profile-wrapper">
+    <div class="profile-card">
+      <h2 class="page-title">پروفایل من</h2>
+
+      <div class="profile-row">
+        <div class="profile-label">نام کاربری:</div>
+        <div class="profile-value">{{ request.user.username }}</div>
+      </div>
+
+      <div class="profile-row">
+        <div class="profile-label">ایمیل:</div>
+        <div class="profile-value">{{ request.user.email }}</div>
+      </div>
+
+
+      <div class="profile-actions">
+        <a href="{% url 'order_list' %}" class="btn-primary">سفارش‌های من</a>
+        <a href="{% url 'edit_profile' %}" class="btn-primary">ویرایش پروفایل</a>
+      </div>
+
+
+      <div class="auth-switch" style="margin-top:16px;">
+        <a href="/">بازگشت به صفحه اصلی</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

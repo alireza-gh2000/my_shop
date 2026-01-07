@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load jalali_filters %}
+{% load persian_filters %}
+
+
+{% block title %}{{ category_name }}{% endblock %}
+
+{% block content %}
+
+<div class="product-container">
+
+    <h1 class="page-title"> عطرهای {{ category_name }}</h1>
+
+    <div class="product-grid">
+        {% for product in products %}
+            <div class="product-card">
+
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="product-img">
+                {% else %}
+                    <img src="{% static 'no-image.png' %}" class="product-img">
+                {% endif %}
+
+                <div class="product-info">
+                    <h3>{{ product.title }}</h3>
+
+                    <p class="price">
+                        {{ product.price|price_fa }}
+                    </p>
+
+                    <a href="{% url 'product_detail' product.id %}" class="buy-btn">
+                        مشاهده محصول
+                    </a>
+                </div>
+
+            </div>
+        {% empty %}
+            <p style="
+                padding:25px;
+                background:#111;
+                border-radius:10px;
+                text-align:center;
+            ">
+                هنوز محصولی در این دسته‌بندی وجود ندارد.
+            </p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

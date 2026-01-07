@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ورود</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-box">
+        <h2>ورود به حساب</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>نام کاربری:</label>
+            <input type="text" name="username" class="input-field" required>
+
+            <label>رمز عبور:</label>
+            <input type="password" name="password" class="input-field" required>
+
+            <button type="submit" class="auth-submit">ورود</button>
+
+            <div class="auth-switch">
+                حساب ندارید؟ <a href="{% url 'signup' %}">ثبت‌نام</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+</body>
+
+<div style="background:blue; padding:30px;">THIS IS LOGIN.HTML</div>
+
+</html>
