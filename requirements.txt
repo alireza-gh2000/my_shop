@@ -9,6 +9,7 @@ click==8.3.1
 colorama==0.4.6
 cookiecutter==2.6.0
 Django==5.2.8
+gunicorn==25.0.2
 idna==3.11
 jalali_core==1.0.0
 jdatetime==5.2.0
@@ -16,6 +17,7 @@ Jinja2==3.1.6
 markdown-it-py==4.0.0
 MarkupSafe==3.0.3
 mdurl==0.1.2
+packaging==26.0
 pillow==12.0.0
 Pygments==2.19.2
 pytailwindcss==0.3.0
